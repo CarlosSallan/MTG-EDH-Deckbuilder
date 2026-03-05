@@ -1,0 +1,76 @@
+/* blog/static/blog/style.css */
+
+/* Color palette*/
+:root {
+  --midnight-violet: #242038;
+  --slate-blue: #725ac1;
+  --soft-periwinkle: #8d86c9;
+  --pale-slate: #cac4ce;
+  --linen: #f7ece1;
+}
+
+/* Reset browser defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;  /* padding won't increase element size */
+}
+
+/* Base text style */
+body {
+    font-family: Georgia, serif;  /* Georgia font, or any serif as fallback */
+    line-height: 1.6;  /* 160% line spacing, easier to read */
+    color: var(--midnight-violet);  /* dark gray text */
+}
+
+/* Top navigation bar */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: var(--slate-blue);
+    position:sticky;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+ul li {
+    float: left;
+}
+
+ul li a {
+    display: block;
+    color: var(--midnight-violet);
+    text-align: center;
+    text-decoration: none;  /* remove underline from links */
+    margin-right: 1.5rem;
+    font-size: 1.1rem;
+    padding: 14px 16px;
+}
+
+ul li a:hover {  /* :hover = when the mouse is over the element */
+    color: var(--pale-slate);
+}
+
+/* Main content area */
+.container {  /* .container = targets elements with class="container" */
+    max-width: 800px;
+    margin: 2rem auto;  /* 2rem top/bottom, auto left/right (centers it) */
+    padding: 0 1rem;
+}
+
+/* Headings */
+h1, h2, h3 {  /* comma = apply to all three */
+    margin-bottom: 1rem;
+    color: var(--soft-periwinkle);
+}
+
+/* Page footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--pale-slate);
+    margin-top: 3rem;
+    border-top: 1px solid var(--soft-periwinkle);  /* 1px line, solid (not dashed), lightgray */
+}
