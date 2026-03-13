@@ -1,9 +1,13 @@
 from django.shortcuts import render
+from django.views.generic import ListView
+from .models import Deck
 
-from django.shortcuts import render
 
 def home(request):
-    """Home page view."""
-    # request = the incoming HTTP request (URL, method, headers, user info, etc.)
-    # render() loads the template file, returns it as an HTTP response
-    return render(request, 'blog/home.html')
+    return render(request, template_name='blog/home.html')
+
+
+class DeckListView(ListView):
+    model = Deck
+    template_name = "blog/deck_list.html"
+    context_object_name = "decks"
