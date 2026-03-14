@@ -1,9 +1,15 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 # blog/views.py
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from .models import Deck
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm                  # the form to show (username + password + confirm)
+    template_name = 'registration/signup.html'     # the HTML template to render
+    success_url = reverse_lazy('login')            # after signup, redirect to the login page
 
 class DeckListView(ListView):
     model = Deck
