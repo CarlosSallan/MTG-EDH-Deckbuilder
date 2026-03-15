@@ -10,9 +10,22 @@
     <link rel="stylesheet" href="{% static 'blog/style.css' %}">  <!-- generates /static/blog/style.css -->
 </head>
 <body>
-    <ul>
-        <li><a href="{% url 'home' %}">Home</a></li>
-    </ul>
+    <nav>
+    <a href="{% url 'blog:home' %}">Home</a>
+    <a href="{% url 'blog:decks' %}">Posts</a>
+    <span class="nav-right">
+        {% if user.is_authenticated %}  <!-- Django checks if the user is logged in -->
+            <span class="nav-user">{{ user.username }}</span>
+            <!-- Logout uses a form (POST) instead of a link (GET) because it changes server state -->
+            <form method="post" action="{% url 'logout' %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </span>
+    </nav>
 
     <div class="container">
         {% block content %}{% endblock %}  <!-- each page fills this block with its own content -->
