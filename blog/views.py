@@ -23,3 +23,8 @@ def home(request):
     # request = the incoming HTTP request (URL, method, headers, user info, etc.)
     # render() loads the template file, returns it as an HTTP response
     return render(request, 'blog/home.html')
+
+class DeckDetailView(DetailView):
+    model = Deck
+    template_name = "blog/deck_detail.html"
+    context_object_name = "deck"

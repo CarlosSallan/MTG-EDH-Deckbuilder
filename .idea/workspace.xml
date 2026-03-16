@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="public decks view">
+    <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="Display public decks on /decks page">
+      <change afterPath="$PROJECT_DIR$/templates/blog/deck_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/blog/decks.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/blog/decks.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,12 +38,12 @@
     &quot;assignee&quot;: &quot;CarlosSallan&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/CarlosSallan/MTG-EDH-Deckbuilder&quot;,
-    &quot;accountId&quot;: &quot;49df4e48-cc29-453c-9d00-6375ab7177b2&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/CarlosSallan/MTG-EDH-Deckbuilder.git",
+    "accountId": "7beb0750-a4fa-4842-9a3d-ff346b2f28f2"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -70,7 +72,7 @@
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
     "dart.analysis.tool.window.visible": "false",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "#2 on mael-feature",
+    "git-widget-placeholder": "mael-feature",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -112,8 +114,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PY-253.30387.127" />
-        <option value="bundled-python-sdk-3944b0c99280-6d6dccd035ac-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.30387.127" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PY-253.30387.173" />
+        <option value="bundled-python-sdk-4762d8aabb82-6d6dccd035ac-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.30387.173" />
       </set>
     </attachedChunks>
   </component>
@@ -131,6 +133,7 @@
       <workItem from="1773131465699" duration="7374000" />
       <workItem from="1773252769666" duration="939000" />
       <workItem from="1773401118451" duration="6908000" />
+      <workItem from="1773648689423" duration="251000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -164,7 +167,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773401718045</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Display public decks on /decks page">
+      <option name="closed" value="true" />
+      <created>1773589293624</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1773589293624</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,6 +229,7 @@
     <MESSAGE value="Vuelta al paso 3." />
     <MESSAGE value="Models Deck, Card and DeckCard created." />
     <MESSAGE value="public decks view" />
-    <option name="LAST_COMMIT_MESSAGE" value="public decks view" />
+    <MESSAGE value="Display public decks on /decks page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Display public decks on /decks page" />
   </component>
 </project>
