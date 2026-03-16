@@ -1,5 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
+from django.db.models import Q
 # blog/views.py
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -17,14 +19,27 @@ class DeckListView(ListView):
     context_object_name = "decks"
 
     def get_queryset(self):
-        return Deck.objects.filter(is_public=True)
+        user=self.request.user
+        if user.is_authenticated:
+            return Deck.objects.filter(Q(author=user) | Q(is_public=True))
+        else:
+            return Deck.objects.filter(is_public=True)
 def home(request):
     """Home page view."""
     # request = the incoming HTTP request (URL, method, headers, user info, etc.)
     # render() loads the template file, returns it as an HTTP response
     return render(request, 'blog/home.html')
 
+
 class DeckDetailView(DetailView):
     model = Deck
     template_name = "blog/deck_detail.html"
     context_object_name = "deck"
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated:
+            return Deck.objects.filter(Q(author=user) | Q(is_public=True))
+        else:
+            return Deck.objects.filter(is_public=True)
