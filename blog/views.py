@@ -19,7 +19,11 @@ class DeckListView(ListView):
     context_object_name = "decks"
 
     def get_queryset(self):
-        return Deck.objects.filter(is_public=True)
+        user=self.request.user
+        if user.is_authenticated:
+            return Deck.objects.filter(Q(author=user) | Q(is_public=True))
+        else:
+            return Deck.objects.filter(is_public=True)
 def home(request):
     """Home page view."""
     # request = the incoming HTTP request (URL, method, headers, user info, etc.)

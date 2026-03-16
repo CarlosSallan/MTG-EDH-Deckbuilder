@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="Display public decks on /decks page">
-      <change beforePath="$PROJECT_DIR$/.idea/MTG_EDH_BUILDER.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MTG_EDH_BUILDER.iml" afterDir="false" />
+    <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="DeckDetailView is_public view for anyone">
+      <change afterPath="$PROJECT_DIR$/templates/registration/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MTG_EDH_BUILDER/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/MTG_EDH_BUILDER/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,7 +176,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773589293624</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="DeckDetailView is_public view for anyone">
+      <option name="closed" value="true" />
+      <created>1773651815864</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1773651815864</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -229,6 +239,7 @@
     <MESSAGE value="Models Deck, Card and DeckCard created." />
     <MESSAGE value="public decks view" />
     <MESSAGE value="Display public decks on /decks page" />
-    <option name="LAST_COMMIT_MESSAGE" value="Display public decks on /decks page" />
+    <MESSAGE value="DeckDetailView is_public view for anyone" />
+    <option name="LAST_COMMIT_MESSAGE" value="DeckDetailView is_public view for anyone" />
   </component>
 </project>
