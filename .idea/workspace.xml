@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="Display public decks on /decks page">
-      <change afterPath="$PROJECT_DIR$/templates/blog/deck_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/MTG_EDH_BUILDER.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MTG_EDH_BUILDER.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blog/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,12 +37,12 @@
     &quot;assignee&quot;: &quot;CarlosSallan&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/CarlosSallan/MTG-EDH-Deckbuilder.git",
-    "accountId": "7beb0750-a4fa-4842-9a3d-ff346b2f28f2"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/CarlosSallan/MTG-EDH-Deckbuilder.git&quot;,
+    &quot;accountId&quot;: &quot;7beb0750-a4fa-4842-9a3d-ff346b2f28f2&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -72,7 +71,7 @@
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
     "dart.analysis.tool.window.visible": "false",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "mael-feature",
+    "git-widget-placeholder": "carlos-feature",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
