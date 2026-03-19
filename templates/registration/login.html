@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Login - MTG EDH Builder{% endblock %}
+
+{% block content %}
+  <h1>Login</h1>
+  
+  <form method="post" class="form-narrow">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-green">Login</button>
+  </form>
+  
+  <p class="login-link">Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+{% endblock %}
