@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="DeckDetailView is_public view for anyone">
-      <change afterPath="$PROJECT_DIR$/templates/registration/login.html" afterDir="false" />
+    <list default="true" id="cdeb8beb-f740-4138-bb4c-95e4b606259e" name="Changes" comment="Add DeckDetailView and deck detail page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MTG_EDH_BUILDER/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/MTG_EDH_BUILDER/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/blog/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/blog/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/blog/deck_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/blog/deck_list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,12 +37,12 @@
     &quot;assignee&quot;: &quot;CarlosSallan&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/CarlosSallan/MTG-EDH-Deckbuilder.git&quot;,
-    &quot;accountId&quot;: &quot;7beb0750-a4fa-4842-9a3d-ff346b2f28f2&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/CarlosSallan/MTG-EDH-Deckbuilder.git",
+    "accountId": "7beb0750-a4fa-4842-9a3d-ff346b2f28f2"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -73,7 +71,7 @@
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
     "dart.analysis.tool.window.visible": "false",
     "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
-    "git-widget-placeholder": "carlos-feature",
+    "git-widget-placeholder": "mael-feature",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -134,7 +132,7 @@
       <workItem from="1773131465699" duration="7374000" />
       <workItem from="1773252769666" duration="939000" />
       <workItem from="1773401118451" duration="6908000" />
-      <workItem from="1773648689423" duration="251000" />
+      <workItem from="1773648689423" duration="1628000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <option name="closed" value="true" />
@@ -176,13 +174,13 @@
       <option name="project" value="LOCAL" />
       <updated>1773589293624</updated>
     </task>
-    <task id="LOCAL-00006" summary="DeckDetailView is_public view for anyone">
+    <task id="LOCAL-00006" summary="Add DeckDetailView and deck detail page">
       <option name="closed" value="true" />
-      <created>1773651815864</created>
+      <created>1773649084390</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1773651815864</updated>
+      <updated>1773649084391</updated>
     </task>
     <option name="localTasksCounter" value="7" />
     <servers />
@@ -239,7 +237,7 @@
     <MESSAGE value="Models Deck, Card and DeckCard created." />
     <MESSAGE value="public decks view" />
     <MESSAGE value="Display public decks on /decks page" />
-    <MESSAGE value="DeckDetailView is_public view for anyone" />
-    <option name="LAST_COMMIT_MESSAGE" value="DeckDetailView is_public view for anyone" />
+    <MESSAGE value="Add DeckDetailView and deck detail page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add DeckDetailView and deck detail page" />
   </component>
 </project>

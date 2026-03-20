@@ -15,8 +15,9 @@ class SignUpView(CreateView):
 
 class DeckListView(ListView):
     model = Deck
-    template_name = "blog/decks.html"
+    template_name = "blog/deck_list.html"
     context_object_name = "decks"
+    paginate_by = 5
 
     def get_queryset(self):
         user=self.request.user
