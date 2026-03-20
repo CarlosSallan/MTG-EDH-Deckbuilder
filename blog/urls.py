@@ -7,4 +7,6 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("decks/", views.DeckListView.as_view(), name="decks"),
     path("decks/<int:pk>/", views.DeckDetailView.as_view(), name="deck_detail"),
+    path("your-decks/", views.your_decks, name="your_decks"),
+    path("decks/new/", views.DeckCreateView.as_view(), name="deck_create"),
 ]
