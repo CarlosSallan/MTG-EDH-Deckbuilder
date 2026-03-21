@@ -2,6 +2,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 # blog/views.py
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -15,8 +18,9 @@ class SignUpView(CreateView):
 
 class DeckListView(ListView):
     model = Deck
-    template_name = "blog/decks.html"
+    template_name = "blog/deck_list.html"
     context_object_name = "decks"
+    paginate_by = 5
 
     def get_queryset(self):
         user=self.request.user
@@ -30,6 +34,10 @@ def home(request):
     # render() loads the template file, returns it as an HTTP response
     return render(request, 'blog/home.html')
 
+@login_required
+def your_decks(request):
+    decks = Deck.objects.filter(author=request.user)
+    return render(request, "blog/your_decks.html", {"decks": decks})
 
 class DeckDetailView(DetailView):
     model = Deck
@@ -43,3 +51,13 @@ class DeckDetailView(DetailView):
             return Deck.objects.filter(Q(author=user) | Q(is_public=True))
         else:
             return Deck.objects.filter(is_public=True)
+
+class DeckCreateView(CreateView):
+    model = Deck
+    fields = ["name", "commander", "description"]
+    template_name = "blog/deck_form.html"
+    success_url = reverse_lazy("blog:decks")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

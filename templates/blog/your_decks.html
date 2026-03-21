@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Your Decks{% endblock %}
+
+{% block content %}
+<h1>Your Decks</h1>
+
+<a href="{% url 'blog:deck_create' %}" style="display:inline-block; margin-bottom:20px;">
+    + Create a new deck
+</a>
+
+<ul>
+    {% for deck in decks %}
+        <li>
+            <a href="{% url 'blog:deck_detail' deck.pk %}">
+                {{ deck.name }} - Commander: {{ deck.commander }}
+            </a>
+        </li>
+    {% empty %}
+        <p>You have no decks yet.</p>
+    {% endfor %}
+</ul>
+
+{% endblock %}
