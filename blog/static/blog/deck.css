@@ -1,0 +1,103 @@
+/* Layout general */
+
+.deck-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.cards-column {
+    width: 70%;
+}
+
+
+/* Commander */
+
+.commander-section {
+    display: flex;
+    align-items: flex-start;
+}
+
+.commander-section .card-img {
+    margin-left: 0;   /* no cascade on commander */
+}
+
+
+/* Tipo de carta */
+
+.card-type {
+    margin-bottom: 40px;
+}
+
+.card-type h3 {
+    margin-bottom: 10px;
+}
+
+
+/* Contenedor de cartas */
+
+.card-stack {
+    display: flex;
+    align-items: flex-start;
+}
+
+
+/* Carta individual */
+
+.card-wrapper {
+    position: relative;
+}
+
+
+/* Imagen de carta */
+
+.card-img {
+    width: 120px;
+    margin-left: -80px;
+    border-radius: 6px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.card-stack .card-wrapper:first-child .card-img {
+    margin-left: 0;
+}
+
+.card-img:hover {
+    transform: scale(1.15);
+    z-index: 10;
+}
+
+
+/* PREVIEW */
+
+.card-preview {
+    position: fixed;
+    right: 60px;
+    top: 120px;
+
+    width: 260px;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.card-preview img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.card-preview p {
+    text-align: center;
+    margin-top: 6px;
+    font-weight: bold;
+}
+
+
+/* Mostrar preview al hacer hover */
+
+.card-wrapper:hover .card-preview {
+    opacity: 1;
+}
