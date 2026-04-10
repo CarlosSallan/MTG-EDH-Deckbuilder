@@ -7,7 +7,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}MTG EDH Builder{% endblock %}</title>  <!-- child templates override this -->
-    <link rel="stylesheet" href="{% static 'blog/style.css' %}">  <!-- generates /static/blog/style.css -->
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'blog/main.css' %}">
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <nav>
