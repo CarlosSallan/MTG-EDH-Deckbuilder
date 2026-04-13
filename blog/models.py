@@ -8,12 +8,12 @@ class Card(models.Model):
     oracle_id = models.UUIDField()
 
     name = models.CharField(max_length=200)
-    type_line = models.CharField(max_length=200)
+    type_line = models.CharField(max_length=200, default='')
     set_code = models.CharField(max_length=10)
     collector_number = models.CharField(max_length=20)
 
     image_url = models.URLField() # default image size
-    image_large_url = models.URLField() # larger image for hover
+    image_large_url = models.URLField(default='') # larger image for hover
 
     def __str__(self):
         return self.name
