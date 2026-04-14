@@ -58,7 +58,14 @@
 
                 <div class="card-wrapper">
 
+                    <!-- Imagen pequeña de la carta-->
                     <img src="{{ dc.card.image_url }}" class="card-img">
+                    {% if request.user == deck.author %}
+                        <form method="post" action="{% url 'blog:remove_card' deck.id dc.card.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="remove-btn">❌</button>
+                        </form>
+                    {% endif %}
 
                     <div class="card-preview">
                         <img src="{{ dc.card.image_large_url }}">

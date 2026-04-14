@@ -101,3 +101,15 @@
 .card-wrapper:hover .card-preview {
     opacity: 1;
 }
+
+/*Delete card button*/
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+}

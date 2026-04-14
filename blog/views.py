@@ -2,11 +2,11 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
-from .models import Deck
+from .models import Deck, DeckCard
 
 
 # -------------------------
@@ -111,3 +111,16 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+# -------------------------
+# Delete card
+# -------------------------
+@login_required
+def remove_card(request, deck_id, card_id):
+    deck = get_object_or_404(Deck, id=deck_id, author=request.user)
+
+    deck_card = get_object_or_404(DeckCard, deck=deck, card_id=card_id)
+
+    deck_card.delete()
+
+    return redirect("blog:deck_detail", pk=deck.id)
