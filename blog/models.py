@@ -7,10 +7,11 @@ class Card(models.Model):
     scryfall_id = models.UUIDField(unique=True)
     oracle_id = models.UUIDField()
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200) # name of the card
     type_line = models.CharField(max_length=200, default='')
     set_code = models.CharField(max_length=10)
     collector_number = models.CharField(max_length=20)
+    cmc = models.IntegerField() # Converted mana cost of the card, used for calculate the average cmc of a deck
 
     image_url = models.URLField() # default image size
     image_large_url = models.URLField(default='') # larger image for hover
