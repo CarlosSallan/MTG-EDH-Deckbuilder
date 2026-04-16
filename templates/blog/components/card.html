@@ -1,0 +1,21 @@
+<div class="card-wrapper">
+
+    <img src="{{ dc.card.image_url }}" class="card-img">
+
+    {% if show_remove %}
+    <form method="post" action="{% url 'blog:remove_card' deck.id dc.card.id %}">
+        {% csrf_token %}
+        <button class="remove-btn">❌</button>
+    </form>
+    {% endif %}
+
+    <div class="card-quantity">
+        x{{ dc.quantity }}
+    </div>
+
+    <div class="card-preview">
+        <img src="{{ dc.card.image_large_url }}">
+        <p>{{ dc.card.name }}</p>
+    </div>
+
+</div>

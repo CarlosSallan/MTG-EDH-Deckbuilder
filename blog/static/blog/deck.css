@@ -1,4 +1,6 @@
-/* Layout general */
+/* =========================
+   Layout general
+========================= */
 
 .deck-container {
     display: flex;
@@ -11,7 +13,9 @@
 }
 
 
-/* Commander */
+/* =========================
+   Commander
+========================= */
 
 .commander-section {
     display: flex;
@@ -19,11 +23,13 @@
 }
 
 .commander-section .card-img {
-    margin-left: 0;   /* no cascade on commander */
+    margin-left: 0; /* sin cascada */
 }
 
 
-/* Tipo de carta */
+/* =========================
+   Tipo de carta
+========================= */
 
 .card-type {
     margin-bottom: 40px;
@@ -34,42 +40,70 @@
 }
 
 
-/* Contenedor de cartas */
+/* =========================
+   Contenedor cartas
+========================= */
 
 .card-stack {
     display: flex;
     align-items: flex-start;
+    overflow: visible; /* importante para hover */
 }
 
 
-/* Carta individual */
+/* =========================
+   Carta individual
+========================= */
 
 .card-wrapper {
     position: relative;
 }
 
 
-/* Imagen de carta */
+/* =========================
+   Imagen de carta
+========================= */
 
 .card-img {
     width: 120px;
     margin-left: -80px;
     border-radius: 6px;
-    transition: transform 0.2s ease;
     cursor: pointer;
+
+    position: relative;
+    z-index: 1;
+
+    transition: transform 0.2s ease, z-index 0s;
 }
 
+/* primera carta sin margen negativo */
 .card-stack .card-wrapper:first-child .card-img {
     margin-left: 0;
 }
 
+/* hover principal */
 .card-img:hover {
-    transform: scale(1.15);
-    z-index: 10;
+    transform: scale(1.15) translateY(-10px);
+    z-index: 999; /* muy alto para asegurar */
 }
 
 
-/* PREVIEW */
+/* =========================
+   Atenuar otras cartas (extra pro)
+========================= */
+
+.card-stack:hover .card-img {
+    opacity: 0.6;
+}
+
+.card-stack .card-img:hover {
+    opacity: 1;
+}
+
+
+/* =========================
+   PREVIEW
+========================= */
 
 .card-preview {
     position: fixed;
@@ -79,7 +113,9 @@
     width: 260px;
 
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
+
     transition: opacity 0.2s ease;
 }
 
@@ -95,21 +131,72 @@
     font-weight: bold;
 }
 
-
-/* Mostrar preview al hacer hover */
-
+/* mostrar preview SOLO en hover */
 .card-wrapper:hover .card-preview {
     opacity: 1;
+    visibility: visible;
 }
 
-/*Delete card button*/
+
+/* =========================
+   Delete button
+========================= */
+
 .remove-btn {
     position: absolute;
     top: 5px;
     right: 5px;
+
     background: red;
     color: white;
     border: none;
+
     cursor: pointer;
     border-radius: 50%;
+    width: 24px;
+    height: 24px;
+
+    font-size: 12px;
+
+    z-index: 1000;
+
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.card-wrapper:hover .remove-btn {
+    opacity: 1;
+}
+
+.card-wrapper:hover .card-img {
+    transform: scale(1.15) translateY(-10px);
+}
+
+/* =========================
+   Card quantity (x2, x3)
+========================= */
+
+.card-quantity {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+
+    padding: 2px 6px;
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    z-index: 1000;
+}
+
+/* aparece en hover */
+.card-wrapper:hover .card-quantity {
+    opacity: 1;
 }
