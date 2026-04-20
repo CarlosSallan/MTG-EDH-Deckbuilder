@@ -139,6 +139,59 @@
 
 
 /* =========================
+   Delete deck button
+========================= */
+
+.deck-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.delete-deck-form {
+    display: inline;
+}
+
+.delete-deck-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.deck-item:hover .delete-deck-btn {
+    opacity: 1;
+}
+
+.delete-deck-btn--visible {
+    opacity: 1;
+}
+
+.deck-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.deck-title-row h1 {
+    margin: 0;
+}
+
+.deck-title-row .delete-deck-form {
+    display: flex;
+    align-items: center;
+}
+
+.delete-deck-btn:hover {
+    transform: scale(1.2);
+}
+
+
+/* =========================
    Delete button
 ========================= */
 

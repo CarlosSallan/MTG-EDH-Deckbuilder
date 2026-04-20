@@ -113,6 +113,16 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 # -------------------------
+# Delete deck
+# -------------------------
+@login_required
+def delete_deck(request, deck_id):
+    deck = get_object_or_404(Deck, id=deck_id, author=request.user)
+    deck.delete()
+    return redirect("blog:your_decks")
+
+
+# -------------------------
 # Delete card
 # -------------------------
 @login_required

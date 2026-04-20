@@ -7,7 +7,15 @@
 
 {% block content %}
 
-<h1>{{ deck.name }}</h1>
+<div class="deck-title-row">
+    <h1>{{ deck.name }}</h1>
+    {% if request.user == deck.author %}
+    <form method="post" action="{% url 'blog:delete_deck' deck.id %}" class="delete-deck-form">
+        {% csrf_token %}
+        <button class="delete-deck-btn delete-deck-btn--visible" title="Delete deck" onclick="return confirm('Are you sure you want to delete this deck?')">🗑</button>
+    </form>
+    {% endif %}
+</div>
 
 <p><strong>Author:</strong> {{ deck.author }}</p>
 <p><strong>Description:</strong> {{ deck.description }}</p>
