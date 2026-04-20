@@ -1,6 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Your Decks{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'blog/deck.css' %}">
+{% endblock %}
 
 {% block content %}
 <h1>Your Decks</h1>
@@ -11,10 +16,14 @@
 
 <ul>
     {% for deck in decks %}
-        <li>
+        <li class="deck-item">
             <a href="{% url 'blog:deck_detail' deck.pk %}">
                 {{ deck.name }} - Commander: {{ deck.commander }}
             </a>
+            <form method="post" action="{% url 'blog:delete_deck' deck.pk %}" class="delete-deck-form">
+                {% csrf_token %}
+                <button class="delete-deck-btn" title="Delete deck" onclick="return confirm('Are you sure you want to delete this deck?')">🗑</button>
+            </form>
         </li>
     {% empty %}
         <p>You have no decks yet.</p>
