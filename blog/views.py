@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
 from .models import Deck, DeckCard
@@ -132,5 +133,19 @@ def remove_card(request, deck_id, card_id):
     deck_card = get_object_or_404(DeckCard, deck=deck, card_id=card_id)
 
     deck_card.delete()
+
+    return redirect("blog:deck_detail", pk=deck.id)
+
+@require_POST
+@login_required
+def update_quantity(request, deck_id, card_id):
+    deck = get_object_or_404(Deck, id=deck_id, author=request.user)
+    deck_card = get_object_or_404(DeckCard, deck=deck, card_id=card_id)
+
+    quantity = int(request.POST.get("quantity", 1))
+
+    if quantity > 0:
+        deck_card.quantity = quantity
+        deck_card.save()
 
     return redirect("blog:deck_detail", pk=deck.id)
