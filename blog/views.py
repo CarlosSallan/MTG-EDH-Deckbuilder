@@ -7,7 +7,8 @@ from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy
-from .models import Deck, DeckCard
+from .models import Deck, DeckCard, Card
+import uuid
 
 
 # -------------------------
@@ -121,6 +122,46 @@ def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, author=request.user)
     deck.delete()
     return redirect("blog:your_decks")
+
+
+# -------------------------
+# Add card (via Scryfall)
+# -------------------------
+@login_required
+def add_card(request, deck_id):
+    deck = get_object_or_404(Deck, id=deck_id, author=request.user)
+
+    if request.method == "POST":
+        scryfall_id = request.POST.get("scryfall_id")
+        name = request.POST.get("name")
+        type_line = request.POST.get("type_line", "")
+        image_url = request.POST.get("image_url", "")
+        image_large_url = request.POST.get("image_large_url", "")
+        oracle_id = request.POST.get("oracle_id", "")
+        set_code = request.POST.get("set_code", "")
+        collector_number = request.POST.get("collector_number", "")
+        cmc = int(float(request.POST.get("cmc", 0)))
+
+        if scryfall_id and name:
+            card, _ = Card.objects.get_or_create(
+                scryfall_id=uuid.UUID(scryfall_id),
+                defaults={
+                    "oracle_id": uuid.UUID(oracle_id) if oracle_id else uuid.uuid4(),
+                    "name": name,
+                    "type_line": type_line,
+                    "image_url": image_url,
+                    "image_large_url": image_large_url,
+                    "set_code": set_code,
+                    "collector_number": collector_number,
+                    "cmc": cmc,
+                }
+            )
+            deck_card, created = DeckCard.objects.get_or_create(deck=deck, card=card)
+            if not created:
+                deck_card.quantity += 1
+                deck_card.save()
+
+    return redirect("blog:deck_detail", pk=deck_id)
 
 
 # -------------------------

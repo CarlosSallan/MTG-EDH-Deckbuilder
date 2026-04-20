@@ -50,6 +50,30 @@
 
 <h2>Cards</h2>
 
+{% if request.user == deck.author %}
+<div class="add-card-section">
+    <h3>Add a card</h3>
+    <div style="position:relative; display:inline-block;">
+        <input type="text" id="card-search" placeholder="Search a card..." autocomplete="off" style="width:300px; padding:6px;">
+        <ul id="card-suggestions" style="display:none; position:absolute; background:white; border:1px solid #ccc; list-style:none; margin:0; padding:0; width:300px; z-index:1000;"></ul>
+    </div>
+
+    <form id="add-card-form" method="post" action="{% url 'blog:add_card' deck.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="scryfall_id" id="scryfall_id">
+        <input type="hidden" name="oracle_id" id="oracle_id">
+        <input type="hidden" name="name" id="card_name">
+        <input type="hidden" name="type_line" id="type_line">
+        <input type="hidden" name="image_url" id="image_url">
+        <input type="hidden" name="image_large_url" id="image_large_url">
+        <input type="hidden" name="set_code" id="set_code">
+        <input type="hidden" name="collector_number" id="collector_number">
+        <input type="hidden" name="cmc" id="cmc">
+        <button type="submit" id="add-card-btn" disabled style="margin-left:8px; padding:6px 12px;">Add</button>
+    </form>
+</div>
+{% endif %}
+
 <div class="deck-container">
 
     <div class="cards-column">
@@ -80,4 +104,69 @@
 
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(function () {
+    let debounceTimer;
+
+    $("#card-search").on("input", function () {
+        const query = $(this).val().trim();
+        clearTimeout(debounceTimer);
+
+        if (query.length < 2) {
+            $("#card-suggestions").hide().empty();
+            return;
+        }
+
+        debounceTimer = setTimeout(function () {
+            $.getJSON("https://api.scryfall.com/cards/autocomplete", { q: query }, function (data) {
+                const $list = $("#card-suggestions").empty();
+                if (data.data.length === 0) { $list.hide(); return; }
+
+                data.data.slice(0, 8).forEach(function (name) {
+                    $("<li>").text(name)
+                        .css({ padding: "6px 10px", cursor: "pointer" })
+                        .hover(function () { $(this).css("background", "#eee"); },
+                               function () { $(this).css("background", "white"); })
+                        .on("click", function () {
+                            $("#card-search").val(name);
+                            $list.hide().empty();
+                            fetchCardDetails(name);
+                        })
+                        .appendTo($list);
+                });
+                $list.show();
+            });
+        }, 300);
+    });
+
+    function fetchCardDetails(name) {
+        $.getJSON("https://api.scryfall.com/cards/named", { fuzzy: name }, function (card) {
+            $("#scryfall_id").val(card.id);
+            $("#oracle_id").val(card.oracle_id);
+            $("#card_name").val(card.name);
+            $("#type_line").val(card.type_line || "");
+            $("#set_code").val(card.set);
+            $("#collector_number").val(card.collector_number);
+            $("#cmc").val(card.cmc || 0);
+
+            const img = card.image_uris ? card.image_uris.small : (card.card_faces ? card.card_faces[0].image_uris.small : "");
+            const imgLarge = card.image_uris ? card.image_uris.normal : (card.card_faces ? card.card_faces[0].image_uris.normal : "");
+            $("#image_url").val(img);
+            $("#image_large_url").val(imgLarge);
+
+            $("#add-card-btn").prop("disabled", false);
+        });
+    }
+
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest("#card-search, #card-suggestions").length) {
+            $("#card-suggestions").hide();
+        }
+    });
+});
+</script>
 {% endblock %}
