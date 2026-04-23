@@ -78,20 +78,16 @@
 
     <div class="cards-column">
 
-        {% for type, cards in cards_by_type.items %}
+        {% for type, data in cards_by_type.items %}
 
         <div class="card-type">
 
-            <h3>{{ type }} ({{ cards|length }})</h3>
+            <h3>{{ type }} ({{ data.total }})</h3>
 
             <div class="card-stack">
 
-                {% for dc in cards %}
-                    {% if request.user == deck.author %}
-                        {% include "blog/components/card.html" with dc=dc deck=deck show_remove=True %}
-                    {% else %}
-                        {% include "blog/components/card.html" with dc=dc deck=deck show_remove=False %}
-                    {% endif %}
+                {% for dc in data.cards %}
+                    {% include "blog/components/card.html" with dc=dc deck=deck show_remove=is_owner %}
                 {% endfor %}
 
             </div>

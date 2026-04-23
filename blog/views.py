@@ -74,29 +74,53 @@ def your_decks(request):
 # DECK DETAIL
 # -------------------------
 
-class DeckDetailView(DeckAccessMixin, DetailView):
-    """Deck detail view with cards grouped by type."""
+# return the primary type of a card, generalizing it's type.
+def get_card_type(type_line):
+    main = type_line.split("—")[0].strip()
+
+    if "Creature" in main:
+        return "Creature"
+    if "Artifact" in main:
+        return "Artifact"
+    if "Enchantment" in main:
+        return "Enchantment"
+    if "Instant" in main:
+        return "Instant"
+    if "Sorcery" in main:
+        return "Sorcery"
+    if "Planeswalker" in main:
+        return "Planeswalker"
+    if "Land" in main:
+        return "Land"
+
+    return "Other"
+
+class DeckDetailView(DetailView):
     model = Deck
     template_name = "blog/deck_detail.html"
     context_object_name = "deck"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        deck = self.object
 
-        # All cards of the deck
-        deck_cards = self.object.deckcard_set.select_related("card").all()
-
-        # Dictionary: type → cards of the type
         cards_by_type = {}
-        for dc in deck_cards:
-            card_type = dc.card.type_line or "Other"
-            if card_type not in cards_by_type:
-                cards_by_type[card_type] = []
-            cards_by_type[card_type].append(dc)
 
-        type_order = ["Battle", "Planeswalker", "Creature", "Artifact", "Enchantment", "Instant", "Sorcery", "Land", "Other"]
-        sorted_cards = {k: cards_by_type[k] for k in type_order if k in cards_by_type}
-        context["cards_by_type"] = sorted_cards
+        for dc in DeckCard.objects.filter(deck=deck).select_related("card"):
+            type_name = get_card_type(dc.card.type_line)
+
+            if type_name not in cards_by_type:
+                cards_by_type[type_name] = {
+                    "cards": [],
+                    "total": 0
+                }
+
+            cards_by_type[type_name]["cards"].append(dc)
+            cards_by_type[type_name]["total"] += dc.quantity
+
+        context["cards_by_type"] = cards_by_type
+        context["is_owner"] = self.request.user == deck.author
+
         return context
 
 # -------------------------
