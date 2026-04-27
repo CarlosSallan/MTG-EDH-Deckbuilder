@@ -130,12 +130,46 @@ class DeckDetailView(DetailView):
 class DeckCreateView(LoginRequiredMixin, CreateView):
     """Create a new deck view."""
     model = Deck
-    fields = ["name", "commander", "description"]
+    fields = ["name", "description"]
     template_name = "blog/deck_form.html"
     success_url = reverse_lazy("blog:decks")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["commanders"] = [
+            ("commander", "Commander", True),
+            ("partner_commander", "Partner Commander (optional)", False),
+        ]
+        return context
+
+    def _get_or_create_card(self, prefix):
+        scryfall_id = self.request.POST.get(f"{prefix}_scryfall_id")
+        if not scryfall_id:
+            return None
+        card, _ = Card.objects.get_or_create(
+            scryfall_id=uuid.UUID(scryfall_id),
+            defaults={
+                "oracle_id": uuid.UUID(self.request.POST.get(f"{prefix}_oracle_id")) if self.request.POST.get(f"{prefix}_oracle_id") else uuid.uuid4(),
+                "name": self.request.POST.get(f"{prefix}_name", ""),
+                "type_line": self.request.POST.get(f"{prefix}_type_line", ""),
+                "image_url": self.request.POST.get(f"{prefix}_image_url", ""),
+                "image_large_url": self.request.POST.get(f"{prefix}_image_large_url", ""),
+                "set_code": self.request.POST.get(f"{prefix}_set_code", ""),
+                "collector_number": self.request.POST.get(f"{prefix}_collector_number", ""),
+                "cmc": int(float(self.request.POST.get(f"{prefix}_cmc", 0))),
+            }
+        )
+        return card
+
     def form_valid(self, form):
+        commander = self._get_or_create_card("commander")
+        if not commander:
+            form.add_error(None, "Please select a commander.")
+            return self.form_invalid(form)
+
         form.instance.author = self.request.user
+        form.instance.commander = commander
+        form.instance.partner_commander = self._get_or_create_card("partner_commander")
         return super().form_valid(form)
 
 # -------------------------

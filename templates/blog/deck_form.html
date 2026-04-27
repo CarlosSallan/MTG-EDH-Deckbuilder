@@ -1,13 +1,146 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Create a new deck</h1>
+<h1>Create a new deck</h1>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+<form method="post" id="deck-form">
+  {% csrf_token %}
 
-    <button type="submit">Save</button>
-  </form>
+  {% if form.non_field_errors %}
+    <p style="color:red;">{{ form.non_field_errors }}</p>
+  {% endif %}
 
+  <p>
+    <label for="{{ form.name.id_for_label }}">Name:</label>
+    {{ form.name }}
+    {% if form.name.errors %}<span style="color:red;">{{ form.name.errors }}</span>{% endif %}
+  </p>
+
+  <p>
+    <label for="{{ form.description.id_for_label }}">Description:</label>
+    {{ form.description }}
+  </p>
+
+  <!-- Commander search -->
+  {% for prefix, label, required in commanders %}
+  <p>
+    <label for="{{ prefix }}-search">{{ label }}:</label>
+    <input type="text" id="{{ prefix }}-search" placeholder="Search a legendary creature..." autocomplete="off" style="width:300px;">
+    <ul id="{{ prefix }}-results" style="list-style:none; padding:0; margin:0; border:1px solid #ccc; max-width:300px; display:none; position:absolute; background:#fff; z-index:100;"></ul>
+  </p>
+
+  <div id="{{ prefix }}-selected" style="display:none; margin-bottom:10px;">
+    <img id="{{ prefix }}-img" src="" alt="" style="height:80px; border-radius:4px; vertical-align:middle;">
+    <strong id="{{ prefix }}-name-display" style="margin-left:8px;"></strong>
+    <button type="button" class="commander-clear" data-prefix="{{ prefix }}" style="margin-left:8px;">✕</button>
+  </div>
+
+  <input type="hidden" name="{{ prefix }}_scryfall_id" id="{{ prefix }}_scryfall_id">
+  <input type="hidden" name="{{ prefix }}_oracle_id" id="{{ prefix }}_oracle_id">
+  <input type="hidden" name="{{ prefix }}_name" id="{{ prefix }}_name">
+  <input type="hidden" name="{{ prefix }}_type_line" id="{{ prefix }}_type_line">
+  <input type="hidden" name="{{ prefix }}_image_url" id="{{ prefix }}_image_url">
+  <input type="hidden" name="{{ prefix }}_image_large_url" id="{{ prefix }}_image_large_url">
+  <input type="hidden" name="{{ prefix }}_set_code" id="{{ prefix }}_set_code">
+  <input type="hidden" name="{{ prefix }}_collector_number" id="{{ prefix }}_collector_number">
+  <input type="hidden" name="{{ prefix }}_cmc" id="{{ prefix }}_cmc">
+  {% endfor %}
+
+  <button type="submit">Save</button>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  function initCommanderSearch(prefix) {
+    const $search  = $("#" + prefix + "-search");
+    const $results = $("#" + prefix + "-results");
+    const $selected = $("#" + prefix + "-selected");
+
+    function fillCard(card) {
+      const imageUrl      = card.image_uris ? card.image_uris.small  : (card.card_faces ? card.card_faces[0].image_uris.small  : "");
+      const imageLargeUrl = card.image_uris ? card.image_uris.normal : (card.card_faces ? card.card_faces[0].image_uris.normal : "");
+      $("#" + prefix + "_scryfall_id").val(card.id);
+      $("#" + prefix + "_oracle_id").val(card.oracle_id || "");
+      $("#" + prefix + "_name").val(card.name);
+      $("#" + prefix + "_type_line").val(card.type_line || "");
+      $("#" + prefix + "_image_url").val(imageUrl);
+      $("#" + prefix + "_image_large_url").val(imageLargeUrl);
+      $("#" + prefix + "_set_code").val(card.set || "");
+      $("#" + prefix + "_collector_number").val(card.collector_number || "");
+      $("#" + prefix + "_cmc").val(card.cmc || 0);
+      $("#" + prefix + "-img").attr("src", imageUrl);
+      $("#" + prefix + "-name-display").text(card.name);
+      $selected.show();
+      $search.hide();
+      $("label[for='" + prefix + "-search']").hide();
+    }
+
+    function showResults(names) {
+      $results.empty().show();
+      if (!names.length) {
+        $results.append($("<li>").text("No results").css({ padding: "6px 10px", color: "#888" }));
+        return;
+      }
+      names.slice(0, 8).forEach(function (name) {
+        $("<li>").text(name).css({ padding: "6px 10px", cursor: "pointer" })
+          .hover(function () { $(this).css("background", "#eee"); }, function () { $(this).css("background", "#fff"); })
+          .on("click", function () {
+            $results.hide().empty();
+            $search.val("Fetching card...");
+            $.getJSON("https://api.scryfall.com/cards/named?exact=" + encodeURIComponent(name), fillCard);
+          })
+          .appendTo($results);
+      });
+    }
+
+    function fetchPopular() {
+      $results.empty().show().append($("<li>").text("Loading popular commanders...").css({ padding: "6px 10px", color: "#888" }));
+      $.getJSON("https://api.scryfall.com/cards/search?q=type%3Alegendary+type%3Acreature&order=edhrec", function (data) {
+        showResults(data.data.map(function (c) { return c.name; }));
+      });
+    }
+
+    function fetchAutocomplete(query) {
+      $results.empty().show().append($("<li>").text("Searching...").css({ padding: "6px 10px", color: "#888" }));
+      $.getJSON("https://api.scryfall.com/cards/autocomplete?q=" + encodeURIComponent(query), function (data) {
+        showResults(data.data);
+      });
+    }
+
+    let searchTimeout = null;
+
+    $search.on("focus", function () {
+      const query = $(this).val().trim();
+      if (query.length === 0) fetchPopular();
+      else if (query.length >= 2) fetchAutocomplete(query);
+    });
+
+    $search.on("input", function () {
+      const query = $(this).val().trim();
+      clearTimeout(searchTimeout);
+      $results.hide().empty();
+      if (query.length < 2) return;
+      $results.show().append($("<li>").text("Searching...").css({ padding: "6px 10px", color: "#888" }));
+      searchTimeout = setTimeout(function () { fetchAutocomplete(query); }, 200);
+    });
+
+    $(document).on("click", function (e) {
+      if (!$(e.target).closest($search).length && !$(e.target).closest($results).length) {
+        $results.hide().empty();
+      }
+    });
+
+    $(document).on("click", ".commander-clear[data-prefix='" + prefix + "']", function () {
+      $("input[id^='" + prefix + "_']").val("");
+      $selected.hide();
+      $search.show().val("").focus();
+      $("label[for='" + prefix + "-search']").show();
+    });
+  }
+
+  initCommanderSearch("commander");
+  initCommanderSearch("partner_commander");
+</script>
 {% endblock %}
