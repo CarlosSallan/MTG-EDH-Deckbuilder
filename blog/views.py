@@ -1,7 +1,9 @@
 # blog/views.py
+from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.views.decorators.http import require_POST
@@ -148,12 +150,13 @@ class DeckDetailView(DetailView):
 # CREATE DECK
 # -------------------------
 
-class DeckCreateView(LoginRequiredMixin, CreateView):
+class DeckCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """Create a new deck view."""
     model = Deck
     fields = ["name", "description"]
     template_name = "blog/deck_form.html"
     success_url = reverse_lazy("blog:decks")
+    success_message = "Deck '%(name)s' created."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -161,6 +164,7 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
             ("commander", "Commander", True, None),
             ("partner_commander", "Partner Commander (optional)", False, None),
         ]
+        context["cancel_url"] = reverse("blog:your_decks")
         return context
 
     def form_valid(self, form):
@@ -178,11 +182,12 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
 # UPDATE DECK
 # -------------------------
 
-class DeckUpdateView(LoginRequiredMixin, UpdateView):
+class DeckUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """Edit a deck owned by the current user."""
     model = Deck
     fields = ["name", "description", "is_public"]
     template_name = "blog/deck_form.html"
+    success_message = "Deck '%(name)s' updated."
 
     def get_queryset(self):
         # 404 if the deck is not owned by the current user — also covers "not found"
@@ -199,6 +204,7 @@ class DeckUpdateView(LoginRequiredMixin, UpdateView):
         ]
         context["form_title"] = "Edit deck"
         context["submit_label"] = "Save changes"
+        context["cancel_url"] = reverse("blog:deck_detail", kwargs={"pk": self.object.pk})
         return context
 
     def form_valid(self, form):
@@ -218,7 +224,9 @@ class DeckUpdateView(LoginRequiredMixin, UpdateView):
 @login_required
 def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, author=request.user)
+    deck_name = deck.name
     deck.delete()
+    messages.success(request, f"Deck '{deck_name}' deleted.")
     return redirect("blog:your_decks")
 
 
@@ -258,6 +266,7 @@ def add_card(request, deck_id):
             if not created:
                 deck_card.quantity += 1
                 deck_card.save()
+            messages.success(request, f"'{name}' added to the deck.")
 
     return redirect("blog:deck_detail", pk=deck_id)
 
@@ -270,9 +279,10 @@ def remove_card(request, deck_id, card_id):
     deck = get_object_or_404(Deck, id=deck_id, author=request.user)
 
     deck_card = get_object_or_404(DeckCard, deck=deck, card_id=card_id)
-
+    card_name = deck_card.card.name
     deck_card.delete()
 
+    messages.success(request, f"'{card_name}' removed from the deck.")
     return redirect("blog:deck_detail", pk=deck.id)
 
 @require_POST

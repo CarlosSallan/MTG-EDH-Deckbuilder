@@ -16,6 +16,19 @@
     margin: 0;
 }
 
+.edit-deck-link {
+    text-decoration: none;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.deck-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.5rem;
+}
+
 .deck-container {
     display: flex;
     gap: 40px;

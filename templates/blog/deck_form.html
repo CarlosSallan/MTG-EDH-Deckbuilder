@@ -7,13 +7,13 @@
   {% csrf_token %}
 
   {% if form.non_field_errors %}
-    <p style="color:red;">{{ form.non_field_errors }}</p>
+    <div class="form-errors">{{ form.non_field_errors }}</div>
   {% endif %}
 
   <p>
     <label for="{{ form.name.id_for_label }}">Name:</label>
     {{ form.name }}
-    {% if form.name.errors %}<span style="color:red;">{{ form.name.errors }}</span>{% endif %}
+    {% if form.name.errors %}<span class="error-text">{{ form.name.errors }}</span>{% endif %}
   </p>
 
   <p>
@@ -54,6 +54,9 @@
   {% endfor %}
 
   <button type="submit">{{ submit_label|default:"Save" }}</button>
+  {% if cancel_url %}
+  <a href="{{ cancel_url }}" style="margin-left:10px;">Cancel</a>
+  {% endif %}
 </form>
 {% endblock %}
 
