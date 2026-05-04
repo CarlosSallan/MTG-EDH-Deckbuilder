@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Create a new deck</h1>
+<h1>{{ form_title|default:"Create a new deck" }}</h1>
 
 <form method="post" id="deck-form">
   {% csrf_token %}
 
   {% if form.non_field_errors %}
-    <p style="color:red;">{{ form.non_field_errors }}</p>
+    <div class="form-errors">{{ form.non_field_errors }}</div>
   {% endif %}
 
   <p>
     <label for="{{ form.name.id_for_label }}">Name:</label>
     {{ form.name }}
-    {% if form.name.errors %}<span style="color:red;">{{ form.name.errors }}</span>{% endif %}
+    {% if form.name.errors %}<span class="error-text">{{ form.name.errors }}</span>{% endif %}
   </p>
 
   <p>
@@ -21,32 +21,42 @@
     {{ form.description }}
   </p>
 
-  <!-- Commander search -->
-  {% for prefix, label, required in commanders %}
+  {% if form.is_public %}
   <p>
+    <label for="{{ form.is_public.id_for_label }}">Public:</label>
+    {{ form.is_public }}
+  </p>
+  {% endif %}
+
+  <!-- Commander search -->
+  {% for prefix, label, required, current in commanders %}
+  <p{% if current %} style="display:none;"{% endif %}>
     <label for="{{ prefix }}-search">{{ label }}:</label>
     <input type="text" id="{{ prefix }}-search" placeholder="Search a legendary creature..." autocomplete="off" style="width:300px;">
     <ul id="{{ prefix }}-results" style="list-style:none; padding:0; margin:0; border:1px solid #ccc; max-width:300px; display:none; position:absolute; background:#fff; z-index:100;"></ul>
   </p>
 
-  <div id="{{ prefix }}-selected" style="display:none; margin-bottom:10px;">
-    <img id="{{ prefix }}-img" src="" alt="" style="height:80px; border-radius:4px; vertical-align:middle;">
-    <strong id="{{ prefix }}-name-display" style="margin-left:8px;"></strong>
+  <div id="{{ prefix }}-selected" style="{% if current %}display:block{% else %}display:none{% endif %}; margin-bottom:10px;">
+    <img id="{{ prefix }}-img" src="{{ current.image_url|default:'' }}" alt="" style="height:80px; border-radius:4px; vertical-align:middle;">
+    <strong id="{{ prefix }}-name-display" style="margin-left:8px;">{{ current.name|default:'' }}</strong>
     <button type="button" class="commander-clear" data-prefix="{{ prefix }}" style="margin-left:8px;">✕</button>
   </div>
 
-  <input type="hidden" name="{{ prefix }}_scryfall_id" id="{{ prefix }}_scryfall_id">
-  <input type="hidden" name="{{ prefix }}_oracle_id" id="{{ prefix }}_oracle_id">
-  <input type="hidden" name="{{ prefix }}_name" id="{{ prefix }}_name">
-  <input type="hidden" name="{{ prefix }}_type_line" id="{{ prefix }}_type_line">
-  <input type="hidden" name="{{ prefix }}_image_url" id="{{ prefix }}_image_url">
-  <input type="hidden" name="{{ prefix }}_image_large_url" id="{{ prefix }}_image_large_url">
-  <input type="hidden" name="{{ prefix }}_set_code" id="{{ prefix }}_set_code">
-  <input type="hidden" name="{{ prefix }}_collector_number" id="{{ prefix }}_collector_number">
-  <input type="hidden" name="{{ prefix }}_cmc" id="{{ prefix }}_cmc">
+  <input type="hidden" name="{{ prefix }}_scryfall_id" id="{{ prefix }}_scryfall_id" value="{{ current.scryfall_id|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_oracle_id" id="{{ prefix }}_oracle_id" value="{{ current.oracle_id|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_name" id="{{ prefix }}_name" value="{{ current.name|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_type_line" id="{{ prefix }}_type_line" value="{{ current.type_line|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_image_url" id="{{ prefix }}_image_url" value="{{ current.image_url|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_image_large_url" id="{{ prefix }}_image_large_url" value="{{ current.image_large_url|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_set_code" id="{{ prefix }}_set_code" value="{{ current.set_code|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_collector_number" id="{{ prefix }}_collector_number" value="{{ current.collector_number|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_cmc" id="{{ prefix }}_cmc" value="{{ current.cmc|default:'' }}">
   {% endfor %}
 
-  <button type="submit">Save</button>
+  <button type="submit">{{ submit_label|default:"Save" }}</button>
+  {% if cancel_url %}
+  <a href="{{ cancel_url }}" style="margin-left:10px;">Cancel</a>
+  {% endif %}
 </form>
 {% endblock %}
 

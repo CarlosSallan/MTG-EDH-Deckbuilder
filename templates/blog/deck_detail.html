@@ -10,6 +10,7 @@
 <div class="deck-title-row">
     <h1>{{ deck.name }}</h1>
     {% if request.user == deck.author %}
+    <a href="{% url 'blog:deck_update' deck.id %}" class="edit-deck-link" title="Edit deck">✏️</a>
     <form method="post" action="{% url 'blog:delete_deck' deck.id %}" class="delete-deck-form">
         {% csrf_token %}
         <button class="delete-deck-btn delete-deck-btn--visible" title="Delete deck" onclick="return confirm('Are you sure you want to delete this deck?')">🗑</button>
