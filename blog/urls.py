@@ -9,6 +9,7 @@ urlpatterns = [
     path("decks/<int:pk>/", views.DeckDetailView.as_view(), name="deck_detail"),
     path("your-decks/", views.your_decks, name="your_decks"),
     path("decks/new/", views.DeckCreateView.as_view(), name="deck_create"),
+    path("decks/<int:pk>/edit/", views.DeckUpdateView.as_view(), name="deck_update"),
     path("decks/<int:deck_id>/update/<int:card_id>/", views.update_quantity, name="update_quantity"),
 
     path("decks/<int:deck_id>/delete/", views.delete_deck, name="delete_deck"),

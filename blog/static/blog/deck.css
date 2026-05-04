@@ -2,6 +2,20 @@
    Layout general
 ========================= */
 
+.deck-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.deck-title-row h1 {
+    margin: 0;
+}
+
+.delete-deck-form {
+    margin: 0;
+}
+
 .deck-container {
     display: flex;
     gap: 40px;
