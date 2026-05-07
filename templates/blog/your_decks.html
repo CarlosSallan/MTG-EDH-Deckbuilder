@@ -17,7 +17,7 @@
 <ul>
     {% for deck in decks %}
         <li class="deck-item">
-            <a href="{% url 'blog:deck_detail' deck.pk %}">
+            <a data-deck-id="{{ deck.id }}" id="deck-name" href="{% url 'blog:deck_detail' deck.pk %}">
                 {{ deck.name }} - Commander: {{ deck.commander }}
             </a>
             <a href="{% url 'blog:deck_update' deck.pk %}" class="edit-deck-link" title="Edit deck">✏️</a>
