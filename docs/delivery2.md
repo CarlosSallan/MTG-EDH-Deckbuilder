@@ -2,7 +2,7 @@
 
 **Course:** Projecte Web
 **Professors:** Roberto Garcia, David Sarrat
-**Team:** Carlos Sallán, Maël Dutrey, [3rd member]
+**Team:** Carlos Sallán, Maël Dutrey
 
 ## 1. GitHub Public Repository
 
@@ -58,7 +58,18 @@ The backend's `_resolve_card_from_post` helper hydrates a local `Card` model fro
 
 #### E2E testing infrastructure
 
-Behave + Splinter + Selenium have been added to the project (`pyproject.toml`). The `features/` directory contains `environment.py` (browser fixture), one initial scenario for unregistered user login, and matching steps. **Additional CRUD scenarios (deck create/update/delete + security restrictions + error handling) are scheduled for the following sprint** — they will plug into the existing infrastructure without any further setup work. The E2E suite is run against a live development server on port 8002.
+Behave + Splinter + Selenium have been added to the project (`pyproject.toml`). The `features/` directory contains `environment.py` (browser fixture + per-feature/scenario hooks) and one feature file per concern. The full suite covers **15 scenarios** across the following features:
+
+- `login.feature` — 4 scenarios: valid credentials, wrong password, non-existing account, empty form.
+- `logout.feature` — 1 scenario: logged-in user logs out.
+- `card_quantity.feature` — 2 scenarios: change quantity, reject zero quantity.
+- `deck_create.feature` — 3 scenarios: create with valid commander, empty form rejected by server-side validation, unauthenticated user redirected to login.
+- `deck_update.feature` — 3 scenarios: owner renames their deck, other user gets 404 when editing someone else's deck, empty name rejected.
+- `deck_delete.feature` — 2 scenarios: owner deletes their deck, other user gets 404 when deleting someone else's deck.
+
+Security restriction tests (Deck Update / Delete) use a second user fixture (`otheruser` / `otherpass123`) created on-demand by `ensure_other_user_exists()` and torn down in `clean_deck_test_data()`. Deck fixtures are refreshed per-scenario via `before_scenario` so scenarios in the same feature do not leak state.
+
+Hidden Scryfall inputs on the deck form are populated via `execute_script` using a known card (`COMMANDER_DATA`) — this lets E2E tests exercise the create/update flow without depending on the live Scryfall API. The E2E suite is run against a live development server on port 8002.
 
 #### Technical notes
 
@@ -83,7 +94,7 @@ templates/base.html   Layout + flash-message rendering
 
 ## 4. Grade Division
 
-All team members have contributed equally to this deliverable; the grade should be divided equally among the three members.
+All team members have contributed equally to this deliverable; the grade should be divided equally among the two members.
 
 ## 5. How to Run
 
@@ -103,4 +114,4 @@ uv run python manage.py runserver
 #   - http://127.0.0.1:8000/admin/     — admin panel (mael / admin12345)
 ```
 
-To run the existing E2E test, start the server on port 8002 in one terminal and run `behave` in another.
+To run the E2E test suite (15 scenarios across login, logout, card quantity, and deck create/update/delete), start the server on port 8002 in one terminal and run `behave` in another.
