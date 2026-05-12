@@ -55,6 +55,8 @@ The backend's `_resolve_card_from_post` helper hydrates a local `Card` model fro
 - **Cancel buttons** on create and update forms — Cancel on Create returns to "Your Decks", on Update returns to deck detail.
 - **Form error styling** — proper `.form-errors` block (alert-style) for non-field errors, `.error-text` for field errors, instead of inline `style="color:red"`.
 - **Edit shortcut** on "Your Decks" list — a ✏️ button next to 🗑 for each deck, so editing is one click away from the list.
+- **Cards displayed in grid** changed the card stacks in `deck_detail.html` for a grid view, making it easier for the user to select the cards.
+- **Card-type sorter** improved the card-type sorter for `deck_detail.html`, now works with multi-type cards.
 
 #### E2E testing infrastructure
 
