@@ -2,7 +2,7 @@
 
 **Course:** Projecte Web
 **Professors:** Roberto Garcia, David Sarrat
-**Team:** Carlos Sallán, Maël Dutrey
+**Team:** Carlos Sallán, Maël Dutrey, Eloy Moreno
 
 ## 1. GitHub Public Repository
 
@@ -96,8 +96,7 @@ templates/base.html   Layout + flash-message rendering
 
 ## 4. Grade Division
 
-All team members have contributed equally to this deliverable; the grade should be divided equally among the two members.
-
+Carlos Sallán and Maël Dutrey have completed the vast majority of the work for this deliverable (CRUD implementation, E2E tests, and Scryfall API integration). Eloy Moreno contributed with corrections, revisions and the final document review. Therefore, Carlos and Maël deserve the maximum grade for this delivery
 ## 5. How to Run
 
 ```bash
