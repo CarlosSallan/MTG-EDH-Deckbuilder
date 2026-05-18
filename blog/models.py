@@ -12,6 +12,7 @@ class Card(models.Model):
     set_code = models.CharField(max_length=10)
     collector_number = models.CharField(max_length=20)
     cmc = models.IntegerField(default=0) # Converted mana cost of the card, used for calculate the average cmc of a deck
+    color_identity = models.CharField(max_length=10, default='') # Sorted letters from {W,U,B,R,G}; empty = colorless
 
     image_url = models.URLField() # default image size
     image_large_url = models.URLField(default='') # larger image for hover
