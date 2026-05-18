@@ -8,12 +8,14 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from .models import Deck, DeckCard, Card
+from .recommendations import get_recommended_cards
 import uuid
 
 
@@ -362,6 +364,20 @@ def remove_card(request, deck_id, card_id):
 
     messages.success(request, f"'{card_name}' removed from the deck.")
     return redirect("blog:deck_detail", pk=deck.id)
+
+@login_required
+def deck_recommendations(request, deck_id):
+    """JSON endpoint returning EDHREC-driven recommended cards for the deck."""
+    deck = get_object_or_404(Deck, id=deck_id, author=request.user)
+
+    allowed_ci = _ensure_card_color_identity(deck.commander)
+    if deck.partner_commander:
+        allowed_ci += _ensure_card_color_identity(deck.partner_commander)
+    allowed_ci = "".join(sorted(set(allowed_ci)))
+
+    cards = get_recommended_cards(deck, limit=20, allowed_ci=allowed_ci)
+    return JsonResponse({"cards": cards})
+
 
 @require_POST
 @login_required

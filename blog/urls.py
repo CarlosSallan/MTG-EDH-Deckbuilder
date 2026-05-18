@@ -15,4 +15,5 @@ urlpatterns = [
     path("decks/<int:deck_id>/delete/", views.delete_deck, name="delete_deck"),
     path("decks/<int:deck_id>/remove/<int:card_id>/", views.remove_card, name="remove_card"),
     path("decks/<int:deck_id>/add-card/", views.add_card, name="add_card"),
+    path("decks/<int:deck_id>/recommendations/", views.deck_recommendations, name="deck_recommendations"),
 ]

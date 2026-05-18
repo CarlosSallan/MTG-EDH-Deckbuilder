@@ -103,6 +103,14 @@
 
 </div>
 
+{% if request.user == deck.author %}
+<div class="recommendations-section" style="margin-top:32px;">
+    <h2>Recommended cards</h2>
+    <p id="recommendations-status" style="color:#888;">Loading recommendations…</p>
+    <div id="recommendations-grid" class="card-stack" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
@@ -225,6 +233,51 @@ $(function () {
             $("#card-suggestions").hide();
         }
     });
+
+    // ----- Recommended cards (EDHREC) -----
+    const recsUrl = "{% url 'blog:deck_recommendations' deck.id %}";
+    const $recStatus = $("#recommendations-status");
+    const $recGrid = $("#recommendations-grid");
+
+    function addRecommendedCard(card) {
+        $("#scryfall_id").val(card.scryfall_id);
+        $("#oracle_id").val(card.oracle_id);
+        $("#card_name").val(card.name);
+        $("#type_line").val(card.type_line);
+        $("#image_url").val(card.image_url);
+        $("#image_large_url").val(card.image_large_url);
+        $("#set_code").val(card.set_code);
+        $("#collector_number").val(card.collector_number);
+        $("#cmc").val(card.cmc);
+        $("#color_identity").val(card.color_identity);
+        $("#add-card-form").trigger("submit");
+    }
+
+    function renderRecommendations(cards) {
+        $recGrid.empty();
+        if (!cards.length) {
+            $recStatus.text("No recommendations available.");
+            return;
+        }
+        $recStatus.hide();
+        cards.forEach(function (card) {
+            const $wrap = $('<div class="card-wrapper">').css({
+                cursor: "pointer",
+                position: "relative",
+            }).attr("title", card.name);
+            $("<img>").attr("src", card.image_url).addClass("card-img").appendTo($wrap);
+            const $preview = $('<div class="card-preview">');
+            $("<img>").attr("src", card.image_large_url).appendTo($preview);
+            $("<p>").text(card.name).appendTo($preview);
+            $preview.appendTo($wrap);
+            $wrap.on("click", function () { addRecommendedCard(card); });
+            $recGrid.append($wrap);
+        });
+    }
+
+    $.getJSON(recsUrl)
+        .done(function (data) { renderRecommendations(data.cards || []); })
+        .fail(function () { $recStatus.text("Couldn't load recommendations."); });
 });
 </script>
 {% endif %}
