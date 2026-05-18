@@ -1,4 +1,8 @@
 # blog/views.py
+import json
+import urllib.request
+from urllib.error import URLError
+
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +15,47 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy, reverse
 from .models import Deck, DeckCard, Card
 import uuid
+
+
+def _normalize_color_identity(value):
+    """Accept a Scryfall array (list/JSON-string) or letter string; return sorted upper letters from WUBRG."""
+    if not value:
+        return ""
+    if isinstance(value, str):
+        # Could be JSON like '["W","U"]' or already a string like "WU"
+        stripped = value.strip()
+        if stripped.startswith("["):
+            try:
+                value = json.loads(stripped)
+            except json.JSONDecodeError:
+                value = list(stripped)
+        else:
+            value = list(stripped)
+    letters = {c.upper() for c in value if isinstance(c, str) and c.upper() in "WUBRG"}
+    return "".join(sorted(letters))
+
+
+def _fetch_color_identity_from_scryfall(scryfall_id):
+    """Fetch a card's color_identity from Scryfall and return the normalized string. Returns '' on failure."""
+    url = f"https://api.scryfall.com/cards/{scryfall_id}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "MTG-EDH-Deckbuilder/1.0"})
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except (URLError, TimeoutError, json.JSONDecodeError, ValueError):
+        return ""
+    return _normalize_color_identity(data.get("color_identity", []))
+
+
+def _ensure_card_color_identity(card):
+    """Make sure `card.color_identity` is populated; refetch from Scryfall if missing. Returns the string."""
+    if card.color_identity:
+        return card.color_identity
+    fetched = _fetch_color_identity_from_scryfall(card.scryfall_id)
+    if fetched:
+        card.color_identity = fetched
+        card.save(update_fields=["color_identity"])
+    return card.color_identity
 
 
 def _resolve_card_from_post(request, prefix):
@@ -29,6 +74,7 @@ def _resolve_card_from_post(request, prefix):
             "set_code": request.POST.get(f"{prefix}_set_code", ""),
             "collector_number": request.POST.get(f"{prefix}_collector_number", ""),
             "cmc": int(float(request.POST.get(f"{prefix}_cmc", 0))),
+            "color_identity": _normalize_color_identity(request.POST.get(f"{prefix}_color_identity", "")),
         }
     )
     return card
@@ -144,6 +190,21 @@ class DeckDetailView(DetailView):
         context["cards_by_type"] = cards_by_type
         context["is_owner"] = self.request.user == deck.author
 
+        # Bootstrap data for the JS card-search filter (only useful to the owner).
+        commander_ci_bootstrap = {
+            "commander": {
+                "scryfall_id": str(deck.commander.scryfall_id),
+                "color_identity": deck.commander.color_identity,
+            },
+            "partner": None,
+        }
+        if deck.partner_commander:
+            commander_ci_bootstrap["partner"] = {
+                "scryfall_id": str(deck.partner_commander.scryfall_id),
+                "color_identity": deck.partner_commander.color_identity,
+            }
+        context["commander_ci_bootstrap"] = commander_ci_bootstrap
+
         return context
 
 # -------------------------
@@ -247,8 +308,24 @@ def add_card(request, deck_id):
         set_code = request.POST.get("set_code", "")
         collector_number = request.POST.get("collector_number", "")
         cmc = int(float(request.POST.get("cmc", 0)))
+        color_identity = _normalize_color_identity(request.POST.get("color_identity", ""))
 
         if scryfall_id and name:
+            # Color identity validation: the card's identity must be a subset of
+            # the union of commander(s) identities. Empty identity (colorless) is always allowed.
+            allowed = set(_ensure_card_color_identity(deck.commander))
+            if deck.partner_commander:
+                allowed |= set(_ensure_card_color_identity(deck.partner_commander))
+            card_colors = set(color_identity)
+            forbidden = card_colors - allowed
+            if forbidden:
+                messages.error(
+                    request,
+                    f"'{name}' cannot be added: its color identity ({color_identity or 'colorless'}) "
+                    f"is outside the commander's identity ({''.join(sorted(allowed)) or 'colorless'})."
+                )
+                return redirect("blog:deck_detail", pk=deck_id)
+
             card, _ = Card.objects.get_or_create(
                 scryfall_id=uuid.UUID(scryfall_id),
                 defaults={
@@ -260,6 +337,7 @@ def add_card(request, deck_id):
                     "set_code": set_code,
                     "collector_number": collector_number,
                     "cmc": cmc,
+                    "color_identity": color_identity,
                 }
             )
             deck_card, created = DeckCard.objects.get_or_create(deck=deck, card=card)

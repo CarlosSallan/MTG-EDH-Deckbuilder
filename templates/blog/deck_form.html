@@ -51,6 +51,7 @@
   <input type="hidden" name="{{ prefix }}_set_code" id="{{ prefix }}_set_code" value="{{ current.set_code|default:'' }}">
   <input type="hidden" name="{{ prefix }}_collector_number" id="{{ prefix }}_collector_number" value="{{ current.collector_number|default:'' }}">
   <input type="hidden" name="{{ prefix }}_cmc" id="{{ prefix }}_cmc" value="{{ current.cmc|default:'' }}">
+  <input type="hidden" name="{{ prefix }}_color_identity" id="{{ prefix }}_color_identity" value="{{ current.color_identity|default:'' }}">
   {% endfor %}
 
   <button type="submit">{{ submit_label|default:"Save" }}</button>
@@ -80,6 +81,8 @@
       $("#" + prefix + "_set_code").val(card.set || "");
       $("#" + prefix + "_collector_number").val(card.collector_number || "");
       $("#" + prefix + "_cmc").val(card.cmc || 0);
+      var ci = Array.isArray(card.color_identity) ? card.color_identity.slice().sort().join("") : "";
+      $("#" + prefix + "_color_identity").val(ci);
       $("#" + prefix + "-img").attr("src", imageUrl);
       $("#" + prefix + "-name-display").text(card.name);
       $selected.show();
