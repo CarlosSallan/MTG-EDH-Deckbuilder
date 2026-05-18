@@ -7,8 +7,8 @@
 
 {% block content %}
 
-<div class="deck-title-row">
-    <h1>{{ deck.name }}</h1>
+<div class="deck-title-row" vocab="https://schema.org/" typeof="CreativeWork">
+    <h1 property="name">{{ deck.name }}</h1>
     {% if request.user == deck.author %}
     <a href="{% url 'blog:deck_update' deck.id %}" class="edit-deck-link" title="Edit deck">✏️</a>
     <form method="post" action="{% url 'blog:delete_deck' deck.id %}" class="delete-deck-form">
@@ -18,8 +18,14 @@
     {% endif %}
 </div>
 
-<p><strong>Author:</strong> {{ deck.author }}</p>
-<p><strong>Description:</strong> {{ deck.description }}</p>
+<div property="author" typeof="Person">
+    <strong>Author:</strong>
+    <span property="name">{{ deck.author }}</span>
+</div>
+<meta property="genre" content="Commander">
+<p property="description">
+    <strong>Description:</strong> {{ deck.description }}
+</p>
 
 
 <h2>Commander</h2>
@@ -29,9 +35,9 @@
     <div class="card-wrapper">
         <img src="{{ deck.commander.image_url }}" class="card-img">
 
-        <div class="card-preview">
+        <div class="card-preview" property="about" typeof="Product">
             <img src="{{ deck.commander.image_large_url }}">
-            <p>{{ deck.commander.name }}</p>
+            <p property="name">{{ deck.commander.name }}</p>
         </div>
     </div>
 
@@ -39,9 +45,9 @@
     <div class="card-wrapper">
         <img src="{{ deck.partner_commander.image_url }}" class="card-img">
 
-        <div class="card-preview">
+        <div class="card-preview" property="about" typeof="Product">
             <img src="{{ deck.partner_commander.image_large_url }}">
-            <p>{{ deck.partner_commander.name }}</p>
+            <p property="name">{{ deck.partner_commander.name }}</p>
         </div>
     </div>
     {% endif %}
@@ -85,7 +91,7 @@
 
         <div class="card-type">
 
-            <h3>{{ type }} ({{ data.total }})</h3>
+            <h3 property="numberOfItems">{{ type }} ({{ data.total }})</h3>
 
             <div class="card-stack">
 

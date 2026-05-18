@@ -1,6 +1,14 @@
-<div class="card-wrapper">
+<div class="card-wrapper"
+     property="hasPart"
+     typeof="Product">
 
-    <img src="{{ dc.card.image_url }}" class="card-img">
+    <img src="{{ dc.card.image_url }}"
+         class="card-img"
+         property="image">
+
+    <meta property="name" content="{{ dc.card.name }}">
+    <meta property="category" content="{{ dc.card.type_line }}">
+    <meta property="identifier" content="{{ dc.card.oracle_id }}">
 
     {% if show_remove %}
     <form method="post" action="{% url 'blog:update_quantity' deck.id dc.card.id %}" class="quantity-form">
@@ -24,7 +32,12 @@
     {% endif %}
 
     <div class="card-preview">
-        <img src="{{ dc.card.image_large_url }}">
+        <img src="{{ dc.card.image_large_url }}"
+             property="image">
+
+        <p property="name">
+            {{ dc.card.name }}
+        </p>
     </div>
 
 </div>
