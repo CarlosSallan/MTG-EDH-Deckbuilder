@@ -36,10 +36,12 @@
     <ul id="{{ prefix }}-results" style="list-style:none; padding:0; margin:0; border:1px solid #ccc; max-width:300px; display:none; position:absolute; background:#fff; z-index:100;"></ul>
   </p>
 
-  <div id="{{ prefix }}-selected" style="{% if current %}display:block{% else %}display:none{% endif %}; margin-bottom:10px;">
+<div id="{{ prefix }}-selected" style="{% if current %}display:block{% else %}display:none{% endif %}; margin-bottom:10px;">
     <img id="{{ prefix }}-img" src="{{ current.image_url|default:'' }}" alt="" style="height:80px; border-radius:4px; vertical-align:middle;">
     <strong id="{{ prefix }}-name-display" style="margin-left:8px;">{{ current.name|default:'' }}</strong>
-    <button type="button" class="commander-clear" data-prefix="{{ prefix }}" style="margin-left:8px;">✕</button>
+    <button type="button" class="commander-clear" data-prefix="{{ prefix }}" style="margin-left:8px;">
+        {% if prefix == "commander" %}✏️{% else %}✕{% endif %}
+    </button>
   </div>
 
   <input type="hidden" name="{{ prefix }}_scryfall_id" id="{{ prefix }}_scryfall_id" value="{{ current.scryfall_id|default:'' }}">
@@ -148,6 +150,7 @@
     $(document).on("click", ".commander-clear[data-prefix='" + prefix + "']", function () {
       $("input[id^='" + prefix + "_']").val("");
       $selected.hide();
+      $search.closest("p").show();
       $search.show().val("").focus();
       $("label[for='" + prefix + "-search']").show();
     });
