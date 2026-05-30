@@ -1,6 +1,11 @@
-<div class="card-wrapper">
+<div class="card-wrapper" property="mentions" typeof="Product">
 
-    <img src="{{ dc.card.image_url }}" class="card-img">
+    <meta property="name" content="{{ dc.card.name }}">
+    <meta property="identifier" content="{{ dc.card.scryfall_id }}">
+    <meta property="category" content="{{ dc.card.type_line }}">
+    <meta property="sku" content="{{ dc.card.set_code }}-{{ dc.card.collector_number }}">
+
+    <img property="image" src="{{ dc.card.image_url }}" class="card-img">
 
     {% if show_remove %}
     <form method="post" action="{% url 'blog:update_quantity' deck.id dc.card.id %}" class="quantity-form">

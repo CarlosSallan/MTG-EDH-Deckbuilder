@@ -7,9 +7,14 @@
 
 {% block content %}
 
-<div itemscope itemtype="http://schema.org/CreativeWork">
+<div vocab="https://schema.org/" typeof="CreativeWork" resource="{{ request.build_absolute_uri }}">
+<link property="url" href="{{ request.build_absolute_uri }}">
+<meta property="genre" content="Magic: The Gathering — Commander/EDH deck">
+<meta property="dateCreated" content="{{ deck.created_at|date:'c' }}">
+<meta property="dateModified" content="{{ deck.updated_at|date:'c' }}">
+
 <div class="deck-title-row">
-    <h1 itemprop="name">{{ deck.name }}</h1>
+    <h1 property="name">{{ deck.name }}</h1>
     {% if request.user == deck.author %}
     <a href="{% url 'blog:deck_update' deck.id %}" class="edit-deck-link" title="Edit deck">✏️</a>
     <form method="post" action="{% url 'blog:delete_deck' deck.id %}" class="delete-deck-form">
@@ -19,32 +24,38 @@
     {% endif %}
 </div>
 
-<p itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <strong>Author:</strong> <span itemprop="name">{{ deck.author }}</span>
+<p property="author" typeof="Person">
+    <strong>Author:</strong> <span property="name">{{ deck.author }}</span>
 </p>
-<p><strong>Description:</strong> <span itemprop="description">{{ deck.description }}</span></p>
+<p><strong>Description:</strong> <span property="description">{{ deck.description }}</span></p>
 
 
 <h2>Commander</h2>
 
 <div class="commander-section">
 
-    <div class="card-wrapper" itemprop="mentions" itemscope itemtype="http://schema.org/Product">
-        <img itemprop="image" src="{{ deck.commander.image_url }}" class="card-img">
+    <div class="card-wrapper" property="mentions" typeof="Product">
+        <meta property="identifier" content="{{ deck.commander.scryfall_id }}">
+        <meta property="category" content="{{ deck.commander.type_line }}">
+        <meta property="sku" content="{{ deck.commander.set_code }}-{{ deck.commander.collector_number }}">
+        <img property="image" src="{{ deck.commander.image_url }}" class="card-img">
 
         <div class="card-preview">
             <img src="{{ deck.commander.image_large_url }}">
-            <p itemprop="name">{{ deck.commander.name }}</p>
+            <p property="name">{{ deck.commander.name }}</p>
         </div>
     </div>
 
     {% if deck.partner_commander %}
-    <div class="card-wrapper" itemprop="mentions" itemscope itemtype="http://schema.org/Product">
-        <img itemprop="image" src="{{ deck.partner_commander.image_url }}" class="card-img">
+    <div class="card-wrapper" property="mentions" typeof="Product">
+        <meta property="identifier" content="{{ deck.partner_commander.scryfall_id }}">
+        <meta property="category" content="{{ deck.partner_commander.type_line }}">
+        <meta property="sku" content="{{ deck.partner_commander.set_code }}-{{ deck.partner_commander.collector_number }}">
+        <img property="image" src="{{ deck.partner_commander.image_url }}" class="card-img">
 
         <div class="card-preview">
             <img src="{{ deck.partner_commander.image_large_url }}">
-            <p itemprop="name">{{ deck.partner_commander.name }}</p>
+            <p property="name">{{ deck.partner_commander.name }}</p>
         </div>
     </div>
     {% endif %}
