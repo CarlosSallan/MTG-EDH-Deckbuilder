@@ -79,6 +79,14 @@ Expected output: one top-level `CreativeWork` with its primitive properties, one
 
 ## 4. Grade Division
 
+The three team members contributed equally to this deliverable:
+
+| Member | Contribution |
+|---|---|
+| Carlos Sallán | 33.3% |
+| Maël Dutrey | 33.3% |
+| Eloy Moreno | 33.3% |
+
 ## 5. How to Run
 
 ```bash
